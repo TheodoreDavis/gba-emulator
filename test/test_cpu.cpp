@@ -8,18 +8,20 @@
  */
 
 #include <cassert>
-#include "cpu.h"
+#include <iostream>
+
+#include "inc/cpu.h"
 
 int main(void) {
 
     CPU cpu;
 
     /*
-     * lsb                                                           msb
-     *         f : flag byte                              a : var byte 
-     * /--------------------------------------------+------------------\
-     * | 0, 0, 0, 0, carry, h_carry, subtract, zero | 8 bits           |
-     * \--------------------------------------------+------------------/
+     * msb                                                  lsb
+     * +--------+--------------------------------------------+
+     * | 8 bits | zero, subtract, h_carry, carry, 0, 0, 0, 0 |
+     * +--------+--------------------------------------------+
+     *    a                           f
      */
 
     // Confirm the struct evaluates to the correct size of 8 bytes
@@ -28,11 +30,11 @@ int main(void) {
     cpu.a() = 5;
     cpu.f() = 0xff;
     assert(cpu.a() == 5);
-    assert(cpu.get_f() == 0xf0); // confirm that we can't write to the 4 lsb of f
-    assert(cpu.get_af() == ((cpu.a() << 8) | cpu.get_f())); // Confirm we have the correct endianess
+    assert(cpu.f() == 0xf0); // confirm that we can't write to the 4 lsb of f
+    assert(cpu.af() == ((cpu.a() << 8) | cpu.f())); // Confirm we have the correct endianess
 
     cpu.set_af(0x01Af);
-    assert(cpu.get_f() == 0xA0); // confirm that we can't write to the 4 lsb of f
+    assert(cpu.f() == 0xA0); // confirm that we can't write to the 4 lsb of f
     
     union Flags t;
     t.byte = 0;
@@ -58,6 +60,8 @@ int main(void) {
     assert(cpu.b() == 7);
     assert(cpu.c() == 8);
     assert(cpu.bc() == ((cpu.b() << 8) | cpu.c()));
+
+    std::cout << "All tests passed!" << std::endl;
 
     return 0;
 }

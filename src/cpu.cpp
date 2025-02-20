@@ -7,7 +7,7 @@
  * 
  */
 
-#include "cpu.h"
+#include "inc/cpu.h"
 
 /* ========================================================================== */
 /* #region                             Registers                              */
@@ -27,7 +27,7 @@ uint8_t& CPU::a() {
     return reg.a;
 }
 
-uint8_t CPU::get_f() const {
+uint8_t CPU::f() const {
     return reg.f.byte;
 }
 
@@ -84,7 +84,7 @@ uint8_t& CPU::l() {
 }
 
 
-uint16_t CPU::get_af() const {
+uint16_t CPU::af() const {
     return GET_REG_PAIR(AF);
 }
 

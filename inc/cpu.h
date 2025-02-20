@@ -25,7 +25,11 @@ union Flags {
     uint8_t byte;
     struct FlagBits bits;
     union Flags& operator=(const unsigned char& rhs) { byte = (0xf0 & rhs); return *this; } // the 4 lsb shall always be 0
+    bool operator==(const unsigned char& rhs) { return this->byte == rhs; }
+    unsigned int operator|(const unsigned int rhs) { return this->byte | rhs; }    
+    friend int operator|(const unsigned int& rhs, const Flags& lhs) { return rhs | lhs.byte; }
 };
+
 
 struct Registers {
     union Flags f;
@@ -65,7 +69,7 @@ class CPU {
 
         uint8_t a() const;
         uint8_t& a();
-        uint8_t get_f() const;
+        uint8_t f() const;
         Flags& f();
         uint8_t b() const;
         uint8_t& b();
@@ -80,7 +84,7 @@ class CPU {
         uint8_t l() const;
         uint8_t& l();
 
-        uint16_t get_af() const;
+        uint16_t af() const;
         void set_af(uint16_t);
         uint16_t bc() const;
         uint16_t& bc();
